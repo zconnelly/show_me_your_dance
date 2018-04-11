@@ -1,5 +1,6 @@
 import hid
 import os
+import random
 import time
 
 buttons = {
@@ -20,14 +21,34 @@ button_lookup = {tuple(value): key for key, value in buttons.iteritems()}
 
 
 def open_swifty():
-    cmd = 'open "https://www.youtube.com/watch?v=tCXGJQYZ9JA"'
+    swift_videos = [
+        "https://www.youtube.com/watch?v=tCXGJQYZ9JA",
+        "https://www.youtube.com/watch?v=3tmd-ClpJxA",
+        "https://www.youtube.com/watch?v=e-ORhEE9VVg",
+        "https://www.youtube.com/watch?v=nfWlot6h_JM",
+    ]
+    cmd = 'open "%s"' % random.choice(swift_videos)
     os.system(cmd)
 
 
+leader_pressed = False
+
+
+def set_leader():
+    global leader_pressed
+    leader_pressed = True
+
+
 dance_map = {
-    'up_left': [',t'],
-    'left': [',c'],
-    'right': [open_swifty],
+    'up': [set_leader],
+    'up_left': [',c'],
+    'down_left': [',t'],
+    'start': ['q', False, 'using {command down, control down}'],
+    'down_right': [open_swifty],
+}
+
+leader_map = {
+    'right': ['q', False, 'using {command down, control down}'],
 }
 
 
@@ -64,13 +85,20 @@ def start_device():
 
 def main(device):
     print("Reading data in")
+    global leader_pressed
     while True:
         data = device.read(64)
         if data:
-            button = button_lookup[tuple(data)]
-            print(button)
-            if button in dance_map:
-                send_keys(*dance_map[button])
+            button = button_lookup.get(tuple(data))
+            if button in dance_map or button in leader_map:
+                print(button)
+                if not leader_pressed:
+                    send_keys(*dance_map[button])
+                elif button in leader_map:
+                    send_keys(*leader_map[button])
+                    leader_pressed = False
+            else:
+                print data
         else:
             time.sleep(0.05)
 
