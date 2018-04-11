@@ -25,15 +25,15 @@ def open_swifty():
 
 
 dance_map = {
-    'up': ['m'],
-    'down_right': [',t'],
-    'start': [None, None, None, open_swifty],
+    'up_left': [',t'],
+    'left': [',c'],
+    'right': [open_swifty],
 }
 
 
-def send_keys(keys, options="", enter=False, special=None):
-    if special:
-        special()
+def send_keys(keys, enter=False, options=""):
+    if callable(keys):
+        keys()
         return
     cmd = """
     osascript -e 'tell application "System Events" to keystroke "%s" %s'
