@@ -1,6 +1,5 @@
-"""
 Show Me Your Dance
-=======
+==================
 
 ### Find the mat!
 
