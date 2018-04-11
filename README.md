@@ -1,5 +1,5 @@
 """
-DDR Vim
+Show Me Your Dance
 =======
 
 ### Find the mat!
@@ -81,4 +81,8 @@ start[0, 1, 128, 128]
 ```bash
 osascript -e 'tell application "System Events" to keystroke "m"'
 ```
+
+### More on Applescript / Sending Keys
+
+https://eastmanreference.com/complete-list-of-applescript-key-codes/
 """

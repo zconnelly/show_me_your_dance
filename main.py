@@ -18,16 +18,32 @@ buttons = {
 
 button_lookup = {tuple(value): key for key, value in buttons.iteritems()}
 
+
+def open_swifty():
+    cmd = 'open "https://www.youtube.com/watch?v=tCXGJQYZ9JA"'
+    os.system(cmd)
+
+
 dance_map = {
-    'right': 'm',
+    'up': ['m'],
+    'down_right': [',t'],
+    'start': [None, None, None, open_swifty],
 }
 
 
-def send_keys(keys, options=""):
+def send_keys(keys, options="", enter=False, special=None):
+    if special:
+        special()
+        return
     cmd = """
     osascript -e 'tell application "System Events" to keystroke "%s" %s'
     """ % (keys, options)
+    enter_cmd = """
+    osascript -e "tell application \"System Events\" to key code 36"
+    """
     os.system(cmd)
+    if enter:
+        os.system(enter_cmd)
 
 
 def start_device():
@@ -54,7 +70,7 @@ def main(device):
             button = button_lookup[tuple(data)]
             print(button)
             if button in dance_map:
-                send_keys(dance_map[button])
+                send_keys(*dance_map[button])
         else:
             time.sleep(0.05)
 
